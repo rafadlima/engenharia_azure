@@ -1,0 +1,13 @@
+{
+	"name": "DWSmartb",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"description": "DW para Carga dos datasets.",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=dbsmartbi.database.windows.net;initial catalog=DWSmartbi;user id=smartbiadmin",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDM0M0JBOEEyLUJBOEYtNEZDQi05NTNELTNDODBBQjYwMzQ0NV9kNzc3MGEzNi1jMjBiLTQwZGItYmZlYy1iMzRmNDZhMjY3YzEiDQp9"
+		}
+	}
+}

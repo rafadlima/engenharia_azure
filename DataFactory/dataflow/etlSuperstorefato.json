@@ -1,0 +1,176 @@
+{
+	"name": "etlSuperstorefato",
+	"properties": {
+		"folder": {
+			"name": "Superstore Flows"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "stgSuperstore",
+						"type": "DatasetReference"
+					},
+					"name": "stgSuperstore"
+				},
+				{
+					"dataset": {
+						"referenceName": "dbodClientes",
+						"type": "DatasetReference"
+					},
+					"name": "dClientes"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dbofCompras",
+						"type": "DatasetReference"
+					},
+					"name": "fCompras"
+				}
+			],
+			"transformations": [
+				{
+					"name": "sltColunasstg"
+				},
+				{
+					"name": "skfCompras"
+				},
+				{
+					"name": "joinskClientes"
+				},
+				{
+					"name": "sltfComprasJoin"
+				},
+				{
+					"name": "adjTipos"
+				},
+				{
+					"name": "adjTipoId"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Id as string,",
+				"          Year_Birth as string,",
+				"          Education as string,",
+				"          Marital_Status as string,",
+				"          Income as string,",
+				"          Kidhome as string,",
+				"          Teenhome as string,",
+				"          Dt_Customer as string,",
+				"          Recency as string,",
+				"          MntWines as string,",
+				"          MntFruits as string,",
+				"          MntMeatProducts as string,",
+				"          MntFishProducts as string,",
+				"          MntSweetProducts as string,",
+				"          MntGoldProds as string,",
+				"          NumDealsPurchases as string,",
+				"          NumWebPurchases as string,",
+				"          NumCatalogPurchases as string,",
+				"          NumStorePurchases as string,",
+				"          NumWebVisitsMonth as string,",
+				"          Response as string,",
+				"          Complain as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> stgSuperstore",
+				"source(output(",
+				"          skClientes as integer,",
+				"          Id as integer,",
+				"          AnoNascimento as integer,",
+				"          Graduacao as string,",
+				"          EstadoCivil as string,",
+				"          Renta as decimal(18,0),",
+				"          QtdCriancas as integer,",
+				"          QtdAdolescentes as integer,",
+				"          DataCadastro as date,",
+				"          DiasUltimaCompra as integer,",
+				"          AceiteCampanha as integer,",
+				"          TemReclamacoes as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> dClientes",
+				"stgSuperstore select(mapColumn(",
+				"          Id,",
+				"          vlrCompraVinhos = MntWines,",
+				"          vlrCompraFrutas = MntFruits,",
+				"          vlrCompraCarnes = MntMeatProducts,",
+				"          vlrCompraPeixes = MntFishProducts,",
+				"          vlrCompraDoces = MntSweetProducts,",
+				"          vlrCompraDourado = MntGoldProds,",
+				"          nmComprasDesconto = NumDealsPurchases,",
+				"          nmComprasWeb = NumWebPurchases,",
+				"          nmComprasCatalogo = NumCatalogPurchases,",
+				"          nmComprasLoja = NumStorePurchases,",
+				"          nmVisitasWeb = NumWebVisitsMonth",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sltColunasstg",
+				"sltColunasstg keyGenerate(output(skfCompras as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> skfCompras",
+				"adjTipoId, dClientes join(adjTipoId@Id == dClientes@Id,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joinskClientes",
+				"joinskClientes select(mapColumn(",
+				"          Id = adjTipoId@Id,",
+				"          vlrCompraVinhos,",
+				"          vlrCompraFrutas,",
+				"          vlrCompraCarnes,",
+				"          vlrCompraPeixes,",
+				"          vlrCompraDoces,",
+				"          vlrCompraDourado,",
+				"          nmComprasDesconto,",
+				"          nmComprasWeb,",
+				"          nmComprasCatalogo,",
+				"          nmComprasLoja,",
+				"          nmVisitasWeb,",
+				"          skfCompras,",
+				"          skClientes",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sltfComprasJoin",
+				"sltfComprasJoin cast(output(",
+				"          vlrCompraVinhos as double,",
+				"          vlrCompraFrutas as double,",
+				"          vlrCompraCarnes as double,",
+				"          vlrCompraPeixes as double,",
+				"          vlrCompraDoces as double,",
+				"          vlrCompraDourado as double,",
+				"          nmComprasDesconto as long,",
+				"          nmComprasWeb as long,",
+				"          nmComprasCatalogo as long,",
+				"          nmComprasLoja as long,",
+				"          nmVisitasWeb as long,",
+				"          skfCompras as integer,",
+				"          skClientes as integer",
+				"     ),",
+				"     errors: true) ~> adjTipos",
+				"skfCompras cast(output(",
+				"          Id as integer",
+				"     ),",
+				"     errors: true) ~> adjTipoId",
+				"adjTipos sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> fCompras"
+			]
+		}
+	}
+}
