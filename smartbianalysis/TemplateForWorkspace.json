@@ -1,0 +1,454 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"type": "string",
+			"metadata": "Nome do Workspace",
+			"defaultValue": "smartbianalysis"
+		},
+		"AzureSqlDatabaseSynapse_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadeia de caracteres segura para 'connectionString' de 'AzureSqlDatabaseSynapse'"
+		},
+		"smartbianalysis-WorkspaceDefaultSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Cadeia de caracteres segura para 'connectionString' de 'smartbianalysis-WorkspaceDefaultSqlServer'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:smartbianalysis.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"smartbianalysis-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlsmartbi.dfs.core.windows.net"
+		}
+	},
+	"variables": {
+		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSqlstgSuperstore')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSynapse",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Id",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Year_Birth",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Education",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Marital_Status",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Income",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Kidhome",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Teenhome",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Dt_Customer",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Recency",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MntWines",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MntFruits",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MntMeatProducts",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MntFishProducts",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MntSweetProducts",
+						"type": "nvarchar"
+					},
+					{
+						"name": "MntGoldProds",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NumDealsPurchases",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NumWebPurchases",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NumCatalogPurchases",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NumStorePurchases",
+						"type": "nvarchar"
+					},
+					{
+						"name": "NumWebVisitsMonth",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Response",
+						"type": "nvarchar"
+					},
+					{
+						"name": "Complain",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "stgsuperstore"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureSqlDatabaseSynapse')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SqldClientes')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSynapse",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "skClientes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AnoNascimento",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Graduacao",
+						"type": "varchar"
+					},
+					{
+						"name": "EstadoCivil",
+						"type": "varchar"
+					},
+					{
+						"name": "Renta",
+						"type": "decimal",
+						"precision": 18,
+						"scale": 0
+					},
+					{
+						"name": "QtdCriancas",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "QtdAdolescentes",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DataCadastro",
+						"type": "date"
+					},
+					{
+						"name": "DiasUltimaCompra",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "AceiteCampanha",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "TemReclamacoes",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "dClientes"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureSqlDatabaseSynapse')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SqlfCompras')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlDatabaseSynapse",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "Id",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "vlrCompraVinhos",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "vlrCompraFrutas",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "vlrCompraCarnes",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "vlrCompraPeixes",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "vlrCompraDoces",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "vlrCompraDourado",
+						"type": "float",
+						"precision": 15
+					},
+					{
+						"name": "nmComprasDesconto",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "nmComprasWeb",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "nmComprasCatalogo",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "nmComprasLoja",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "nmVisitasWeb",
+						"type": "bigint",
+						"precision": 19
+					},
+					{
+						"name": "skfCompras",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "skClientes",
+						"type": "int",
+						"precision": 10
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "fCompras"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AzureSqlDatabaseSynapse')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSqlDatabaseSynapse')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureSqlDatabaseSynapse_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/smartbianalysis-WorkspaceDefaultSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "String"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlDW",
+				"typeProperties": {
+					"connectionString": "[parameters('smartbianalysis-WorkspaceDefaultSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/smartbianalysis-WorkspaceDefaultStorage')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('smartbianalysis-WorkspaceDefaultStorage_properties_typeProperties_url')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/AutoResolveIntegrationRuntime')]",
+			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
+			"type": "Microsoft.Synapse/workspaces/credentials",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "ManagedIdentity",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ScriptCargaEmployee')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "COPY INTO [dbo].[DimEmployee]\nFROM 'https://solliancepublicdata.blob.core.windows.net/dataengineering/dp-203/awdata/DimEmployee.csv'\nWITH (\nFILE_TYPE='CSV',\nFIELDTERMINATOR='|',\nFIELDQUOTE='',\nROWTERMINATOR='\\n',\nENCODING = 'UTF16'\n);GO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "psql_smartbi",
+						"poolName": "psql_smartbi"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ScriptEmployee')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE TABLE [dbo].[DimEmployee](\n[EmployeeKey] [int] NOT NULL,\n[ParentEmployeeKey] [int] NULL,\n[EmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n[ParentEmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n[SalesTerritoryKey] [int] NULL,\n[FirstName] [nvarchar](50) NOT NULL,\n[LastName] [nvarchar](50) NOT NULL,\n[MiddleName] [nvarchar](50) NULL,\n[NameStyle] [bit] NOT NULL,\n[Title] [nvarchar](50) NULL,\n[HireDate] [date] NULL,\n[BirthDate] [date] NULL,\n[LoginID] [nvarchar](256) NULL,\n[EmailAddress] [nvarchar](50) NULL,\n[Phone] [nvarchar](25) NULL,\n[MaritalStatus] [nchar](1) NULL,\n[EmergencyContactName] [nvarchar](50) NULL,\n[EmergencyContactPhone] [nvarchar](25) NULL,\n[SalariedFlag] [bit] NULL,\n[Gender] [nchar](1) NULL,\n[PayFrequency] [tinyint] NULL,\n[BaseRate] [money] NULL,\n[VacationHours] [smallint] NULL,\n[SickLeaveHours] [smallint] NULL,\n[CurrentFlag] [bit] NOT NULL,\n[SalesPersonFlag] [bit] NOT NULL,\n[DepartmentName] [nvarchar](50) NULL,\n[StartDate] [date] NULL,\n[EndDate] [date] NULL,\n[Status] [nvarchar](50) NULL,\n[EmployeePhoto] [varbinary](max) NULL\n)\n\nWITH\n(\nDISTRIBUTION = REPLICATE,\nCLUSTERED INDEX (EmployeeKey)\n);\n\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "psql_smartbi",
+						"poolName": "psql_smartbi"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/psql_smartbi')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "brazilsouth"
+		}
+	]
+}
