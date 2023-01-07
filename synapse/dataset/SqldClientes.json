@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable2",
+	"name": "SqldClientes",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabaseSynapse",

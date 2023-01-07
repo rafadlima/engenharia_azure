@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "SqlfCompras",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AzureSqlDatabaseSynapse",
