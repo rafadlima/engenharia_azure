@@ -1,0 +1,17 @@
+{
+	"name": "Create-View-BCBDolar",
+	"properties": {
+		"content": {
+			"query": "CREATE VIEW [dbo].[VW_BCB_COTACOES]\n\tAS \n\nWITH DATA_VALUES AS (\n    SELECT *       \n    FROM\n\t[BCB_COTACOES]\n),\n\n/* 03. Converter Tipo de Dados e uso Funções de Janela */\nDATA_ANALYSIS AS (\n\n    SELECT  \n    *,\n    -- Média móvel 50 dias\n    AVG([Valor]) -- Definir o cálculo\n    OVER(PARTITION BY Sigla ORDER BY [Data] -- Definir Over\n        ROWS BETWEEN 49 PRECEDING AND CURRENT ROW)-- Definir Período\n    AS dia50_media_movel,\n\n    -- Média móvel 200 dias\n    AVG([Valor]) -- Definir o cálculo\n    OVER(PARTITION BY Sigla ORDER BY [Data] -- Definir Over\n        ROWS BETWEEN 199 PRECEDING AND CURRENT ROW)-- Definir Período\n    AS dia200_media_movel\n\n    FROM (\n        SELECT \n\n        SIGLA, \n        -- String para Datetime\n        CONVERT(DATETIME, CONCAT(SUBSTRING([DATA],1,2),'-',SUBSTRING([DATA],3,2),'-',SUBSTRING([DATA],5,4)), 103) AS [DATA], --DD-MM-YYYY\n        -- String para Numeric    \n        CONVERT(NUMERIC(18,4),REPLACE([VALOR],',','.')) AS VALOR\n\n        FROM DATA_VALUES \n    ) AS RS\n\n)\n/* 04. Executar a consulta */\nSELECT *\nFROM DATA_ANALYSIS\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "sandbox",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

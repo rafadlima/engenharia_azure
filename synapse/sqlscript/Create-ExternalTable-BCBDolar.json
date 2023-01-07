@@ -1,0 +1,17 @@
+{
+	"name": "Create-ExternalTable-BCBDolar",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'CsvTextFormat') \n\tCREATE EXTERNAL FILE FORMAT [CsvTextFormat] \n\tWITH ( FORMAT_TYPE = DELIMITEDTEXT ,\n\t       FORMAT_OPTIONS (\n\t\t\t FIELD_TERMINATOR = ';',\n\t\t\t STRING_DELIMITER = '\"',\n\t\t\t USE_TYPE_DEFAULT = FALSE\n\t\t\t))\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'dsDataLake') \n\tCREATE EXTERNAL DATA SOURCE [dsDataLake] \n\tWITH (\n\t\tLOCATION = 'abfss://discosmarbi@dlsmartbi.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE BCB_COTACOES (\n            [DATA] VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            MOEDA_COD VARCHAR(5) COLLATE Latin1_General_100_BIN2_UTF8,\n            TIPO VARCHAR(2) COLLATE Latin1_General_100_BIN2_UTF8,\n            SIGLA VARCHAR(3) COLLATE Latin1_General_100_BIN2_UTF8,\n            VALOR VARCHAR(255) COLLATE Latin1_General_100_BIN2_UTF8\n\t)\n\tWITH (\n\tLOCATION = 'raw/bcb-dolar.csv',\n\tDATA_SOURCE = [dsDataLake],\n\tFILE_FORMAT = [CsvTextFormat]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.BCB_COTACOES\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "sandbox",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
