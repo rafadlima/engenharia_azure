@@ -16,6 +16,10 @@
 			"metadata": "Cadeia de caracteres segura para 'connectionString' de 'smartbianalysis-WorkspaceDefaultSqlServer'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:smartbianalysis.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
+		"p01_BCB_Dolar_Cotacoes_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ptax.bcb.gov.br/ptax_internet/"
+		},
 		"smartbianalysis-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://dlsmartbi.dfs.core.windows.net"
@@ -25,6 +29,86 @@
 		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/p01_BCB_Dolar_Cotacoes')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Obter os valores de cotações do dolar do Banco Central do Brasil",
+				"activities": [
+					{
+						"name": "Copy_5k3",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "consultaBoletim.do?method=gerarCSVFechamentoMoedaNoPeriodo&ChkMoeda=61&DATAINI=01/11/2022&DATAFIM=07/01/2023"
+							},
+							{
+								"name": "Destination",
+								"value": "discosmarbi/raw/bcb-dolar"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"skipLineCount": 0
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_5k3",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_5k3",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/SourceDataset_5k3')]",
+				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_5k3')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/AzureSqlstgSuperstore')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
@@ -133,6 +217,87 @@
 			},
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/linkedServices/AzureSqlDatabaseSynapse')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_5k3')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "smartbianalysis-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "bcb-dolar.csv",
+						"folderPath": "raw",
+						"fileSystem": "discosmarbi"
+					},
+					"columnDelimiter": ";",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/smartbianalysis-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SourceDataset_5k3')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "p01_BCB_Dolar_Cotacoes",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": "consultaBoletim.do?method=gerarCSVFechamentoMoedaNoPeriodo&ChkMoeda=61&DATAINI=01/11/2022&DATAFIM=07/01/2023"
+					},
+					"columnDelimiter": ";",
+					"rowDelimiter": "\n",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					},
+					{
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/p01_BCB_Dolar_Cotacoes')]"
 			]
 		},
 		{
@@ -327,6 +492,28 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/p01_BCB_Dolar_Cotacoes')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Obter os valores de cotações do dolar do Banco Central do Brasil",
+				"annotations": [],
+				"type": "HttpServer",
+				"typeProperties": {
+					"url": "[parameters('p01_BCB_Dolar_Cotacoes_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": false,
+					"authenticationType": "Anonymous"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/smartbianalysis-WorkspaceDefaultSqlServer')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -431,6 +618,26 @@
 					"currentConnection": {
 						"databaseName": "psql_smartbi",
 						"poolName": "psql_smartbi"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/analise-dolar-bcb')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "/* Uso de Expressão de Tabela Comum (CTE) */\n\nWITH DATA_VALUES AS (\n    SELECT *       \n    FROM\n        OPENROWSET(\n            /* 01. Definir o caminho do arquivo CSV */\n            BULK 'https://dlsmartbi.dfs.core.windows.net/discosmarbi/raw/bcb-dolar.csv',\n            FORMAT = 'CSV',\n            PARSER_VERSION = '2.0',\n            FIELDTERMINATOR = ';'\n        ) \n        WITH (\n\n            /* 02. Definir formato dos dados COLLATE */\n            [DATA] VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            MOEDA_COD VARCHAR(5) COLLATE Latin1_General_100_BIN2_UTF8,\n            TIPO VARCHAR(2) COLLATE Latin1_General_100_BIN2_UTF8,\n            SIGLA VARCHAR(3) COLLATE Latin1_General_100_BIN2_UTF8,\n            VALOR VARCHAR(255) COLLATE Latin1_General_100_BIN2_UTF8\n\n        )                    \n        AS [result]\n),\n\n/* 03. Converter Tipo de Dados e uso Funções de Janela */\nDATA_ANALYSIS AS (\n\n    SELECT  \n    *,\n    -- Média móvel 50 dias\n    AVG([Valor]) -- Definir o cálculo\n    OVER(PARTITION BY Sigla ORDER BY [Data] -- Definir Over\n        ROWS BETWEEN 49 PRECEDING AND CURRENT ROW)-- Definir Período\n    AS dia50_media_movel,\n\n    -- Média móvel 200 dias\n    AVG([Valor]) -- Definir o cálculo\n    OVER(PARTITION BY Sigla ORDER BY [Data] -- Definir Over\n        ROWS BETWEEN 199 PRECEDING AND CURRENT ROW)-- Definir Período\n    AS dia200_media_movel\n\n    FROM (\n        SELECT \n\n        SIGLA, \n        -- String para Datetime\n        CONVERT(DATETIME, CONCAT(SUBSTRING([DATA],1,2),'-',SUBSTRING([DATA],3,2),'-',SUBSTRING([DATA],5,4)), 103) AS [DATA], --DD-MM-YYYY\n        -- String para Numeric    \n        CONVERT(NUMERIC(18,4),REPLACE([VALOR],',','.')) AS VALOR\n\n        FROM DATA_VALUES \n    ) AS RS\n\n)\n/* 04. Executar a consulta */\nSELECT *\nFROM DATA_ANALYSIS\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
