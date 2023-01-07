@@ -84,14 +84,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "SourceDataset_5k3",
+								"referenceName": "Source_bcb_dolar",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "DestinationDataset_5k3",
+								"referenceName": "Destination_bcb_dolar",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -105,8 +105,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/SourceDataset_5k3')]",
-				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_5k3')]"
+				"[concat(variables('workspaceId'), '/datasets/Source_bcb_dolar')]",
+				"[concat(variables('workspaceId'), '/datasets/Destination_bcb_dolar')]"
 			]
 		},
 		{
@@ -220,7 +220,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_5k3')]",
+			"name": "[concat(parameters('workspaceName'), '/Destination_bcb_dolar')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -248,7 +248,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SourceDataset_5k3')]",
+			"name": "[concat(parameters('workspaceName'), '/Source_bcb_dolar')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
