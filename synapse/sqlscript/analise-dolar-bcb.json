@@ -1,0 +1,17 @@
+{
+	"name": "analise-dolar-bcb",
+	"properties": {
+		"content": {
+			"query": "/* Uso de Expressão de Tabela Comum (CTE) */\n\nWITH DATA_VALUES AS (\n    SELECT *       \n    FROM\n        OPENROWSET(\n            /* 01. Definir o caminho do arquivo CSV */\n            BULK 'https://dlsmartbi.dfs.core.windows.net/discosmarbi/raw/bcb-dolar.csv',\n            FORMAT = 'CSV',\n            PARSER_VERSION = '2.0',\n            FIELDTERMINATOR = ';'\n        ) \n        WITH (\n\n            /* 02. Definir formato dos dados COLLATE */\n            [DATA] VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            MOEDA_COD VARCHAR(5) COLLATE Latin1_General_100_BIN2_UTF8,\n            TIPO VARCHAR(2) COLLATE Latin1_General_100_BIN2_UTF8,\n            SIGLA VARCHAR(3) COLLATE Latin1_General_100_BIN2_UTF8,\n            VALOR VARCHAR(255) COLLATE Latin1_General_100_BIN2_UTF8\n\n        )                    \n        AS [result]\n),\n\n/* 03. Converter Tipo de Dados e uso Funções de Janela */\nDATA_ANALYSIS AS (\n\n    SELECT  \n    *,\n    -- Média móvel 50 dias\n    AVG([Valor]) -- Definir o cálculo\n    OVER(PARTITION BY Sigla ORDER BY [Data] -- Definir Over\n        ROWS BETWEEN 49 PRECEDING AND CURRENT ROW)-- Definir Período\n    AS dia50_media_movel,\n\n    -- Média móvel 200 dias\n    AVG([Valor]) -- Definir o cálculo\n    OVER(PARTITION BY Sigla ORDER BY [Data] -- Definir Over\n        ROWS BETWEEN 199 PRECEDING AND CURRENT ROW)-- Definir Período\n    AS dia200_media_movel\n\n    FROM (\n        SELECT \n\n        SIGLA, \n        -- String para Datetime\n        CONVERT(DATETIME, CONCAT(SUBSTRING([DATA],1,2),'-',SUBSTRING([DATA],3,2),'-',SUBSTRING([DATA],5,4)), 103) AS [DATA], --DD-MM-YYYY\n        -- String para Numeric    \n        CONVERT(NUMERIC(18,4),REPLACE([VALOR],',','.')) AS VALOR\n\n        FROM DATA_VALUES \n    ) AS RS\n\n)\n/* 04. Executar a consulta */\nSELECT *\nFROM DATA_ANALYSIS\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
