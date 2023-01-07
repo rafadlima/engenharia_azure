@@ -1,0 +1,88 @@
+{
+	"name": "AzureSqlTable1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSynapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "vlrCompraVinhos",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "vlrCompraFrutas",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "vlrCompraCarnes",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "vlrCompraPeixes",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "vlrCompraDoces",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "vlrCompraDourado",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "nmComprasDesconto",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "nmComprasWeb",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "nmComprasCatalogo",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "nmComprasLoja",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "nmVisitasWeb",
+				"type": "bigint",
+				"precision": 19
+			},
+			{
+				"name": "skfCompras",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "skClientes",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "fCompras"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

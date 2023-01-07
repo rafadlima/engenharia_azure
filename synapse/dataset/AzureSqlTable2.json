@@ -1,0 +1,76 @@
+{
+	"name": "AzureSqlTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSynapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "skClientes",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AnoNascimento",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Graduacao",
+				"type": "varchar"
+			},
+			{
+				"name": "EstadoCivil",
+				"type": "varchar"
+			},
+			{
+				"name": "Renta",
+				"type": "decimal",
+				"precision": 18,
+				"scale": 0
+			},
+			{
+				"name": "QtdCriancas",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "QtdAdolescentes",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DataCadastro",
+				"type": "date"
+			},
+			{
+				"name": "DiasUltimaCompra",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "AceiteCampanha",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "TemReclamacoes",
+				"type": "int",
+				"precision": 10
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "dClientes"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

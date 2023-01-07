@@ -1,0 +1,17 @@
+{
+	"name": "ScriptCargaEmployee",
+	"properties": {
+		"content": {
+			"query": "COPY INTO [dbo].[DimEmployee]\nFROM 'https://solliancepublicdata.blob.core.windows.net/dataengineering/dp-203/awdata/DimEmployee.csv'\nWITH (\nFILE_TYPE='CSV',\nFIELDTERMINATOR='|',\nFIELDQUOTE='',\nROWTERMINATOR='\\n',\nENCODING = 'UTF16'\n);GO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "psql_smartbi",
+				"poolName": "psql_smartbi"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

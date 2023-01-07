@@ -1,0 +1,106 @@
+{
+	"name": "AzureSqlstgSuperstore",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabaseSynapse",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "Id",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Year_Birth",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Education",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Marital_Status",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Income",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Kidhome",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Teenhome",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Dt_Customer",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Recency",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MntWines",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MntFruits",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MntMeatProducts",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MntFishProducts",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MntSweetProducts",
+				"type": "nvarchar"
+			},
+			{
+				"name": "MntGoldProds",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NumDealsPurchases",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NumWebPurchases",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NumCatalogPurchases",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NumStorePurchases",
+				"type": "nvarchar"
+			},
+			{
+				"name": "NumWebVisitsMonth",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Response",
+				"type": "nvarchar"
+			},
+			{
+				"name": "Complain",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "stgsuperstore"
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}
