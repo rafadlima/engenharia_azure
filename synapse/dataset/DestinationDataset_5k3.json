@@ -1,0 +1,23 @@
+{
+	"name": "DestinationDataset_5k3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "smartbianalysis-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "bcb-dolar",
+				"folderPath": "raw",
+				"fileSystem": "discosmarbi"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
