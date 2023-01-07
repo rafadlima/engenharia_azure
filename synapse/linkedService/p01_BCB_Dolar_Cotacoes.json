@@ -1,0 +1,17 @@
+{
+	"name": "p01_BCB_Dolar_Cotacoes",
+	"properties": {
+		"description": "Obter os valores de cotações do dolar do Banco Central do Brasil",
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://ptax.bcb.gov.br/ptax_internet/",
+			"enableServerCertificateValidation": false,
+			"authenticationType": "Anonymous"
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
