@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_5k3",
+	"name": "Destination_bcb_dolar",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "smartbianalysis-WorkspaceDefaultStorage",

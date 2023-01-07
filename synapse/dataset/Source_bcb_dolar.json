@@ -1,5 +1,5 @@
 {
-	"name": "SourceDataset_5k3",
+	"name": "Source_bcb_dolar",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "p01_BCB_Dolar_Cotacoes",

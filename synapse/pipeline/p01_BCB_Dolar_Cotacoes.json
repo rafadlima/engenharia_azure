@@ -51,13 +51,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_5k3",
+						"referenceName": "Source_bcb_dolar",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_5k3",
+						"referenceName": "Destination_bcb_dolar",
 						"type": "DatasetReference"
 					}
 				]
