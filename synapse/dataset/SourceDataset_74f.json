@@ -12,7 +12,7 @@
 				"type": "HttpServerLocation",
 				"relativeUrl": "customers.csv"
 			},
-			"columnDelimiter": ";",
+			"columnDelimiter": ",",
 			"rowDelimiter": "\n",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
