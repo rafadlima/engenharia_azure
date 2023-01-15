@@ -1,5 +1,5 @@
 {
-	"name": "DestinationDataset_74f",
+	"name": "DestinationDataset_Customer",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "smartbianalysis-WorkspaceDefaultStorage",
