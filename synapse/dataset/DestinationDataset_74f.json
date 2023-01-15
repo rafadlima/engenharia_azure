@@ -1,0 +1,23 @@
+{
+	"name": "DestinationDataset_74f",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "smartbianalysis-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "customers",
+				"folderPath": "raw/adventure",
+				"fileSystem": "discosmarbi"
+			},
+			"columnDelimiter": ";",
+			"escapeChar": "\\",
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
