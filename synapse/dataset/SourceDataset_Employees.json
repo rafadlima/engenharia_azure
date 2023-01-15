@@ -5,6 +5,9 @@
 			"referenceName": "AdventureWorkds",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "AdvWorks"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
