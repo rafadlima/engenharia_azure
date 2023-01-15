@@ -1,5 +1,5 @@
 {
-	"name": "SourceDataset_74f",
+	"name": "SourceDataset_Customer",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "AdventureWorkds",
