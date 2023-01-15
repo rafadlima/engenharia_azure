@@ -13,8 +13,8 @@
 				"relativeUrl": "customers.csv"
 			},
 			"columnDelimiter": ",",
-			"rowDelimiter": "",
-			"escapeChar": "",
+			"rowDelimiter": "\n",
+			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
