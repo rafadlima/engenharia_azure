@@ -10,11 +10,11 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "customers",
-				"folderPath": "raw/adventure",
+				"fileName": "customer.csv",
+				"folderPath": "raw/AdvWorks_Stage",
 				"fileSystem": "discosmarbi"
 			},
-			"columnDelimiter": ";",
+			"columnDelimiter": ",",
 			"escapeChar": "\\",
 			"quoteChar": "\""
 		},
