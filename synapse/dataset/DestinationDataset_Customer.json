@@ -5,6 +5,9 @@
 			"referenceName": "smartbianalysis-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
+		"folder": {
+			"name": "AdvWorks"
+		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
