@@ -21,11 +21,6 @@
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
 		},
-		"schema": [
-			{
-				"name": "  <link rel=\"dns-prefetch\" href=\"https://user-images.githubusercontent.com/\">",
-				"type": "String"
-			}
-		]
+		"schema": []
 	}
 }
