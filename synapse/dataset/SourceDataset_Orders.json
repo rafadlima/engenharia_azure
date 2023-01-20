@@ -1,0 +1,31 @@
+{
+	"name": "SourceDataset_Orders",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AdventureWorkds",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "AdvWorks"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "HttpServerLocation",
+				"relativeUrl": "orders.csv"
+			},
+			"columnDelimiter": ",",
+			"rowDelimiter": "\n",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "  <link rel=\"dns-prefetch\" href=\"https://user-images.githubusercontent.com/\">",
+				"type": "String"
+			}
+		]
+	}
+}
