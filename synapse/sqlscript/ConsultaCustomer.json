@@ -1,0 +1,20 @@
+{
+	"name": "ConsultaCustomer",
+	"properties": {
+		"folder": {
+			"name": "ScriptsAdventureWorks_Stage"
+		},
+		"content": {
+			"query": "WITH CUSTOMER AS (\n    SELECT *       \n    FROM\n        OPENROWSET(\n            /* 01. Definir o caminho do arquivo CSV */\n            BULK 'https://dlsmartbi.dfs.core.windows.net/discosmarbi/raw/AdvWorks_Stage/customer.csv',\n            FORMAT = 'CSV',\n            PARSER_VERSION = '2.0',\n            FIELDTERMINATOR = ','\n        ) \n        WITH (\n\n            /* 02. Definir formato dos dados COLLATE */\n            CustomerID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            FirstName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            LastName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            FullName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8\n\n        )                    \n        AS [result]\n)\n\n\n/* 04. Executar a consulta */\nSELECT *\nFROM CUSTOMER\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
