@@ -1,0 +1,20 @@
+{
+	"name": "ConsultaOrders",
+	"properties": {
+		"folder": {
+			"name": "ScriptsAdventureWorks_Stage"
+		},
+		"content": {
+			"query": "WITH ORDERS AS (\n    SELECT *       \n    FROM\n        OPENROWSET(\n            /* 01. Definir o caminho do arquivo CSV */\n            BULK 'https://dlsmartbi.dfs.core.windows.net/discosmarbi/raw/AdvWorks_Stage/orders.csv',\n            FORMAT = 'CSV',\n            PARSER_VERSION = '2.0',\n            FIELDTERMINATOR = ','\n        ) \n        WITH (\n\n            /* 02. Definir formato dos dados COLLATE */\n            SalesOrderID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            SalesOrderDetailID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            OrderDate VARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,\n            DueDate VARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,\n            ShipDate VARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,\n            EmployeeID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            CustomerID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            SubTotal VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            TaxAmt VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            Freight VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            TotalDue VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            ProductID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,    \n            OrderQty VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            UnitPrice VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            UnitPriceDiscount VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            LineTotal VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8\n        )                    \n        AS [result]\n)\n\n\n/* 04. Executar a consulta */\nSELECT *\nFROM ORDERS\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "master",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
