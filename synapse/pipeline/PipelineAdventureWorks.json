@@ -1,9 +1,9 @@
 {
-	"name": "PipelineCustomerAdventure",
+	"name": "PipelineAdventureWorks",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy_74f",
+				"name": "CustomerAdvWorks",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -37,6 +37,63 @@
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "SourceDataset_Customer",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SourceDataset_Customer",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "EmployeeAdvWorks",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [
+					{
+						"name": "Source",
+						"value": "customers.csv"
+					},
+					{
+						"name": "Destination",
+						"value": "discosmarbi/raw/adventure/customers"
+					}
+				],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings",
+							"skipLineCount": 7
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
 						"storeSettings": {
 							"type": "AzureBlobFSWriteSettings"
 						},
@@ -50,13 +107,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SourceDataset_74f",
+						"referenceName": "DestinationDataset_Employees",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DestinationDataset_74f",
+						"referenceName": "DestinationDataset_Employees",
 						"type": "DatasetReference"
 					}
 				]
