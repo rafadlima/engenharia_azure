@@ -123,11 +123,11 @@
 						"userProperties": [
 							{
 								"name": "Source",
-								"value": "customers.csv"
+								"value": "employees.csv"
 							},
 							{
 								"name": "Destination",
-								"value": "discosmarbi/raw/adventure/customers"
+								"value": "discosmarbi/raw/AdvWorks_Stage/employees.csv"
 							}
 						],
 						"typeProperties": {
@@ -169,6 +169,67 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "OrderAdvWorks",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [
+							{
+								"name": "Source",
+								"value": "orders.csv"
+							},
+							{
+								"name": "Destination",
+								"value": "discosmarbi/raw/AdvWorks_Stage/orders.csv"
+							}
+						],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "HttpReadSettings",
+									"requestMethod": "GET"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings",
+									"skipLineCount": 7
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "SourceDataset_Orders",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DestinationDataset_Orders",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -181,7 +242,9 @@
 				"[concat(variables('workspaceId'), '/datasets/SourceDataset_Customer')]",
 				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_Customer')]",
 				"[concat(variables('workspaceId'), '/datasets/SourceDataset_Employees')]",
-				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_Employees')]"
+				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_Employees')]",
+				"[concat(variables('workspaceId'), '/datasets/SourceDataset_Orders')]",
+				"[concat(variables('workspaceId'), '/datasets/DestinationDataset_Orders')]"
 			]
 		},
 		{
@@ -437,6 +500,37 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/DestinationDataset_Orders')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "smartbianalysis-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "AdvWorks"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "orders.csv",
+						"folderPath": "raw/AdvWorks_Stage",
+						"fileSystem": "discosmarbi"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/smartbianalysis-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Destination_bcb_dolar')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -518,6 +612,42 @@
 					"location": {
 						"type": "HttpServerLocation",
 						"relativeUrl": "employees.csv"
+					},
+					"columnDelimiter": ",",
+					"rowDelimiter": "\n",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "  <link rel=\"dns-prefetch\" href=\"https://user-images.githubusercontent.com/\">",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/AdventureWorkds')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SourceDataset_Orders')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AdventureWorkds",
+					"type": "LinkedServiceReference"
+				},
+				"folder": {
+					"name": "AdvWorks"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "HttpServerLocation",
+						"relativeUrl": "orders.csv"
 					},
 					"columnDelimiter": ",",
 					"rowDelimiter": "\n",
@@ -928,6 +1058,29 @@
 				},
 				"content": {
 					"query": "WITH CUSTOMER AS (\n    SELECT *       \n    FROM\n        OPENROWSET(\n            /* 01. Definir o caminho do arquivo CSV */\n            BULK 'https://dlsmartbi.dfs.core.windows.net/discosmarbi/raw/AdvWorks_Stage/customer.csv',\n            FORMAT = 'CSV',\n            PARSER_VERSION = '2.0',\n            FIELDTERMINATOR = ','\n        ) \n        WITH (\n\n            /* 02. Definir formato dos dados COLLATE */\n            CustomerID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            FirstName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            LastName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            FullName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8\n\n        )                    \n        AS [result]\n)\n\n\n/* 04. Executar a consulta */\nSELECT *\nFROM CUSTOMER\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ConsultaOrders')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"folder": {
+					"name": "ScriptsAdventureWorks_Stage"
+				},
+				"content": {
+					"query": "WITH ORDERS AS (\n    SELECT *       \n    FROM\n        OPENROWSET(\n            /* 01. Definir o caminho do arquivo CSV */\n            BULK 'https://dlsmartbi.dfs.core.windows.net/discosmarbi/raw/AdvWorks_Stage/orders.csv',\n            FORMAT = 'CSV',\n            PARSER_VERSION = '2.0',\n            FIELDTERMINATOR = ','\n        ) \n        WITH (\n\n            /* 02. Definir formato dos dados COLLATE */\n            SalesOrderID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            SalesOrderDetailID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            OrderDate VARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,\n            DueDate VARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,\n            ShipDate VARCHAR(50) COLLATE Latin1_General_100_BIN2_UTF8,\n            EmployeeID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            CustomerID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            SubTotal VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            TaxAmt VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            Freight VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            TotalDue VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            ProductID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,    \n            OrderQty VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            UnitPrice VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            UnitPriceDiscount VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            LineTotal VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8\n        )                    \n        AS [result]\n)\n\n\n/* 04. Executar a consulta */\nSELECT *\nFROM ORDERS\n",
 					"metadata": {
 						"language": "sql"
 					},
