@@ -1,0 +1,20 @@
+{
+	"name": "script-stgemployees-load",
+	"properties": {
+		"folder": {
+			"name": "ScriptsAdventureWorks_Stage"
+		},
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'CsvTextFormatEmployees') \n\tCREATE EXTERNAL FILE FORMAT [CsvTextFormatEmployees] \n\tWITH ( FORMAT_TYPE = DELIMITEDTEXT ,\n\t       FORMAT_OPTIONS (\n\t\t\t FIELD_TERMINATOR = ',',\n\t\t\t STRING_DELIMITER = '\"',\n\t\t\t USE_TYPE_DEFAULT = FALSE\n\t\t\t))\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'dsDataLakeEmployees') \n\tCREATE EXTERNAL DATA SOURCE [dsDataLakeEmployees] \n\tWITH (\n\t\tLOCATION = 'abfss://discosmarbi@dlsmartbi.dfs.core.windows.net' \n\t)\nGO\n\nIF EXISTS ( SELECT * FROM sys.external_tables WHERE object_id = OBJECT_ID('dbo.stgEmployees') )\n    DROP EXTERNAL TABLE dbo.stgEmployees\nGO\n\nCREATE EXTERNAL TABLE dbo.stgEmployees (\n            /* 02. Definir formato dos dados COLLATE */\n            EmployeeID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            ManagerID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            FirstName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            LastName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            FullName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            JobTitle VARCHAR(250) COLLATE Latin1_General_100_BIN2_UTF8,\n            OrganizationLevel VARCHAR(5) COLLATE Latin1_General_100_BIN2_UTF8,\n            MaritalStatus VARCHAR(5) COLLATE Latin1_General_100_BIN2_UTF8,\n            Gender VARCHAR(5) COLLATE Latin1_General_100_BIN2_UTF8,\n            Territory VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            Country VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            [Group] VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8    \n\t)\n\tWITH (\n\tLOCATION = 'raw/AdvWorks_Stage/employees.csv',\n\tDATA_SOURCE = [CsvTextFormatEmployees],\n\tFILE_FORMAT = [dsDataLakeEmployees]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.stgEmployees\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "sandbox",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

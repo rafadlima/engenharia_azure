@@ -1,6 +1,9 @@
 {
 	"name": "script-stgcustomer-load",
 	"properties": {
+		"folder": {
+			"name": "ScriptsAdventureWorks_Stage"
+		},
 		"content": {
 			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'CsvTextFormatCustomer3') \n\tCREATE EXTERNAL FILE FORMAT [CsvTextFormatCustomer3] \n\tWITH ( FORMAT_TYPE = DELIMITEDTEXT ,\n\t       FORMAT_OPTIONS (\n\t\t\t FIELD_TERMINATOR = ',',\n\t\t\t STRING_DELIMITER = '\"',\n\t\t\t USE_TYPE_DEFAULT = FALSE\n\t\t\t))\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'dsDataLakeCustomer3') \n\tCREATE EXTERNAL DATA SOURCE [dsDataLakeCustomer3] \n\tWITH (\n\t\tLOCATION = 'abfss://discosmarbi@dlsmartbi.dfs.core.windows.net' \n\t)\nGO\n\nIF EXISTS ( SELECT * FROM sys.external_tables WHERE object_id = OBJECT_ID('dbo.stgCustomer') )\n    DROP EXTERNAL TABLE dbo.stgCustomer\nGO\n\nCREATE EXTERNAL TABLE dbo.stgCustomer (\n            /* 02. Definir formato dos dados COLLATE */\n            CustomerID VARCHAR(10) COLLATE Latin1_General_100_BIN2_UTF8,\n            FirstName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            LastName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8,\n            FullName VARCHAR(100) COLLATE Latin1_General_100_BIN2_UTF8\n\t)\n\tWITH (\n\tLOCATION = 'raw/AdvWorks_Stage/customer.csv',\n\tDATA_SOURCE = [dsDataLakeCustomer3],\n\tFILE_FORMAT = [CsvTextFormatCustomer3]\n\t)\nGO\n\n\nSELECT TOP 100 * FROM dbo.stgCustomer\nGO",
 			"metadata": {

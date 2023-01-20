@@ -37,6 +37,9 @@
 					},
 					"sink": {
 						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
 							"quoteAllText": true,
@@ -53,7 +56,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SourceDataset_Customer",
+						"referenceName": "DestinationDataset_Customer",
 						"type": "DatasetReference"
 					}
 				]
@@ -83,9 +86,8 @@
 					"source": {
 						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
-							"enablePartitionDiscovery": false
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextReadSettings",
@@ -107,7 +109,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DestinationDataset_Employees",
+						"referenceName": "SourceDataset_Employees",
 						"type": "DatasetReference"
 					}
 				],
