@@ -1120,46 +1120,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/ScriptCargaEmployee')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "COPY INTO [dbo].[DimEmployee]\nFROM 'https://solliancepublicdata.blob.core.windows.net/dataengineering/dp-203/awdata/DimEmployee.csv'\nWITH (\nFILE_TYPE='CSV',\nFIELDTERMINATOR='|',\nFIELDQUOTE='',\nROWTERMINATOR='\\n',\nENCODING = 'UTF16'\n);GO",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "psql_smartbi",
-						"poolName": "psql_smartbi"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/ScriptEmployee')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "CREATE TABLE [dbo].[DimEmployee](\n[EmployeeKey] [int] NOT NULL,\n[ParentEmployeeKey] [int] NULL,\n[EmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n[ParentEmployeeNationalIDAlternateKey] [nvarchar](15) NULL,\n[SalesTerritoryKey] [int] NULL,\n[FirstName] [nvarchar](50) NOT NULL,\n[LastName] [nvarchar](50) NOT NULL,\n[MiddleName] [nvarchar](50) NULL,\n[NameStyle] [bit] NOT NULL,\n[Title] [nvarchar](50) NULL,\n[HireDate] [date] NULL,\n[BirthDate] [date] NULL,\n[LoginID] [nvarchar](256) NULL,\n[EmailAddress] [nvarchar](50) NULL,\n[Phone] [nvarchar](25) NULL,\n[MaritalStatus] [nchar](1) NULL,\n[EmergencyContactName] [nvarchar](50) NULL,\n[EmergencyContactPhone] [nvarchar](25) NULL,\n[SalariedFlag] [bit] NULL,\n[Gender] [nchar](1) NULL,\n[PayFrequency] [tinyint] NULL,\n[BaseRate] [money] NULL,\n[VacationHours] [smallint] NULL,\n[SickLeaveHours] [smallint] NULL,\n[CurrentFlag] [bit] NOT NULL,\n[SalesPersonFlag] [bit] NOT NULL,\n[DepartmentName] [nvarchar](50) NULL,\n[StartDate] [date] NULL,\n[EndDate] [date] NULL,\n[Status] [nvarchar](50) NULL,\n[EmployeePhoto] [varbinary](max) NULL\n)\n\nWITH\n(\nDISTRIBUTION = REPLICATE,\nCLUSTERED INDEX (EmployeeKey)\n);\n\nGO",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "psql_smartbi",
-						"poolName": "psql_smartbi"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/analise-dolar-bcb')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
