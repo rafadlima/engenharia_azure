@@ -10,7 +10,7 @@
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "sandbox",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
