@@ -1,0 +1,34 @@
+{
+	"name": "dbofCompras",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DWSmartb",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"tableSchema": {
+				"type": "string"
+			},
+			"tableName": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Superstore Dataset"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().tableSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().tableName",
+				"type": "Expression"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

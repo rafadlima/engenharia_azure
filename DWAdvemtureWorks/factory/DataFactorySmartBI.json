@@ -1,0 +1,9 @@
+{
+	"name": "DataFactorySmartBI",
+	"location": "brazilsouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "d4043248-de0b-4958-b00a-05ca39154fc0",
+		"tenantId": "06664295-3f26-465b-90a0-4d4b6aff4699"
+	}
+}

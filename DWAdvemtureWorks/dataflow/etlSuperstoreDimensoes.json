@@ -1,0 +1,142 @@
+{
+	"name": "etlSuperstoreDimensoes",
+	"properties": {
+		"folder": {
+			"name": "Superstore Flows"
+		},
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "stgSuperstore",
+						"type": "DatasetReference"
+					},
+					"name": "stgSuperstore"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "dbodClientes",
+						"type": "DatasetReference"
+					},
+					"name": "dbdClientes"
+				}
+			],
+			"transformations": [
+				{
+					"name": "selectdCliente",
+					"description": "Renomeando stgSuperstore para selectdCliente com as colunas 'Id, Education, Marital_Status, Income, Kidhome, Teenhome, Dt_Customer, Recency, Response, Complain'"
+				},
+				{
+					"name": "skClientes"
+				},
+				{
+					"name": "adjdClientes"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Id as string,",
+				"          Year_Birth as string,",
+				"          Education as string,",
+				"          Marital_Status as string,",
+				"          Income as string,",
+				"          Kidhome as string,",
+				"          Teenhome as string,",
+				"          Dt_Customer as string,",
+				"          Recency as string,",
+				"          MntWines as string,",
+				"          MntFruits as string,",
+				"          MntMeatProducts as string,",
+				"          MntFishProducts as string,",
+				"          MntSweetProducts as string,",
+				"          MntGoldProds as string,",
+				"          NumDealsPurchases as string,",
+				"          NumWebPurchases as string,",
+				"          NumCatalogPurchases as string,",
+				"          NumStorePurchases as string,",
+				"          NumWebVisitsMonth as string,",
+				"          Response as string,",
+				"          Complain as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> stgSuperstore",
+				"stgSuperstore select(mapColumn(",
+				"          Id,",
+				"          {Ano Nascimento} = Year_Birth,",
+				"          {Graduação} = Education,",
+				"          EstadoCivil = Marital_Status,",
+				"          Renda = Income,",
+				"          QtdCriancas = Kidhome,",
+				"          QtdAdolescentes = Teenhome,",
+				"          DataCadastro = Dt_Customer,",
+				"          DiasUltimaCompra = Recency,",
+				"          AceiteCampanha = Response,",
+				"          TemReclamacoes = Complain",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> selectdCliente",
+				"selectdCliente keyGenerate(output(skClientes as long),",
+				"     startAt: 1L,",
+				"     stepValue: 1L) ~> skClientes",
+				"skClientes cast(output(",
+				"          Id as integer,",
+				"          {Ano Nascimento} as integer,",
+				"          {Graduação} as string,",
+				"          EstadoCivil as string,",
+				"          Renda as double,",
+				"          QtdCriancas as string,",
+				"          QtdAdolescentes as integer,",
+				"          DataCadastro as date,",
+				"          DiasUltimaCompra as integer,",
+				"          AceiteCampanha as integer,",
+				"          TemReclamacoes as integer,",
+				"          skClientes as integer",
+				"     ),",
+				"     errors: true) ~> adjdClientes",
+				"adjdClientes sink(allowSchemaDrift: false,",
+				"     validateSchema: true,",
+				"     input(",
+				"          skClientes as integer,",
+				"          Id as integer,",
+				"          AnoNascimento as integer,",
+				"          Graduacao as string,",
+				"          EstadoCivil as string,",
+				"          Renta as decimal(18,0),",
+				"          QtdCriancas as integer,",
+				"          QtdAdolescentes as integer,",
+				"          DataCadastro as date,",
+				"          DiasUltimaCompra as integer,",
+				"          AceiteCampanha as integer,",
+				"          TemReclamacoes as integer",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          skClientes,",
+				"          Id,",
+				"          AnoNascimento = {Ano Nascimento},",
+				"          Graduacao = {Graduação},",
+				"          EstadoCivil,",
+				"          Renta = Renda,",
+				"          QtdCriancas,",
+				"          QtdAdolescentes,",
+				"          DataCadastro,",
+				"          DiasUltimaCompra,",
+				"          AceiteCampanha,",
+				"          TemReclamacoes",
+				"     )) ~> dbdClientes"
+			]
+		}
+	}
+}

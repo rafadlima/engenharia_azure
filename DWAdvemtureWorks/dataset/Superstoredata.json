@@ -1,0 +1,117 @@
+{
+	"name": "Superstoredata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "discosmartbi",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Superstore Dataset"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "superstore_data.csv",
+				"folderPath": "raw",
+				"fileSystem": "discosmarbi"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "Id",
+				"type": "String"
+			},
+			{
+				"name": "Year_Birth",
+				"type": "String"
+			},
+			{
+				"name": "Education",
+				"type": "String"
+			},
+			{
+				"name": "Marital_Status",
+				"type": "String"
+			},
+			{
+				"name": "Income",
+				"type": "String"
+			},
+			{
+				"name": "Kidhome",
+				"type": "String"
+			},
+			{
+				"name": "Teenhome",
+				"type": "String"
+			},
+			{
+				"name": "Dt_Customer",
+				"type": "String"
+			},
+			{
+				"name": "Recency",
+				"type": "String"
+			},
+			{
+				"name": "MntWines",
+				"type": "String"
+			},
+			{
+				"name": "MntFruits",
+				"type": "String"
+			},
+			{
+				"name": "MntMeatProducts",
+				"type": "String"
+			},
+			{
+				"name": "MntFishProducts",
+				"type": "String"
+			},
+			{
+				"name": "MntSweetProducts",
+				"type": "String"
+			},
+			{
+				"name": "MntGoldProds",
+				"type": "String"
+			},
+			{
+				"name": "NumDealsPurchases",
+				"type": "String"
+			},
+			{
+				"name": "NumWebPurchases",
+				"type": "String"
+			},
+			{
+				"name": "NumCatalogPurchases",
+				"type": "String"
+			},
+			{
+				"name": "NumStorePurchases",
+				"type": "String"
+			},
+			{
+				"name": "NumWebVisitsMonth",
+				"type": "String"
+			},
+			{
+				"name": "Response",
+				"type": "String"
+			},
+			{
+				"name": "Complain",
+				"type": "String"
+			}
+		]
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
