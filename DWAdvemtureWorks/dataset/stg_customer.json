@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "customer",
+				"fileName": "customer.parquet",
 				"folderPath": "DataWarehouse/DWAdventureWorks/silver",
 				"fileSystem": "discosmarbi"
 			},
